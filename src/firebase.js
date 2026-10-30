@@ -1,0 +1,10 @@
+import {initializeApp} from 'firebase/app';
+import {getAnalytics,isSupported} from 'firebase/analytics';
+import {getAuth} from 'firebase/auth';
+import {getFirestore} from 'firebase/firestore';
+const firebaseConfig={apiKey:"AIzaSyDGt5y8rdgdQhGL8xQbPK7eUjFUl4HCvRg",authDomain:"equipment-rental-d01d4.firebaseapp.com",projectId:"equipment-rental-d01d4",storageBucket:"equipment-rental-d01d4.firebasestorage.app",messagingSenderId:"687752475341",appId:"1:687752475341:web:cf1e75e764fc80603baf84",measurementId:"G-Z71TFJNX3T"};
+export const app=initializeApp(firebaseConfig);
+export const secondaryAuth=getAuth(initializeApp(firebaseConfig,'secondary'));
+export const auth=getAuth(app);
+export const db=getFirestore(app);
+isSupported().then(ok=>ok&&getAnalytics(app));
