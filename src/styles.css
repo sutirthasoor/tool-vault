@@ -125,7 +125,37 @@ table{font-size:.78rem}th{font-size:.66rem;padding:8px 12px;letter-spacing:.07em
 .ad-side{width:224px}.ad.collapsed .ad-side{width:60px}
 .ad-brand{height:52px;padding:0 16px;gap:10px}.ad-bt b{font-size:.84rem;font-weight:650}.ad-bt small{font-size:.65rem}
 .ad-nav{padding:6px 10px}.ad-group{padding:14px 10px 5px;font-size:.58rem;letter-spacing:.14em;font-weight:600}
-.ad-link{padding:6px 10px;gap:10px;font-size:.8rem;font-weight:500;border-radius:7px;margin:1px 0}.ad-link.active{background:rgba(255,255,255,.1);color:#fff;box-shadow:inset 2px 0 0 #5b8cff}
+/* sleeker idle menu items */
+.ad-link{
+  padding:7px 12px;
+  gap:11px;
+  font-size:.8rem;
+  font-weight:500;
+  letter-spacing:-.005em;
+  border-radius:8px;
+  margin:1px 0;
+  color:#9fb0d3;
+  transition:background .16s ease,color .16s ease;
+}
+.ad-link:hover{
+  background:rgba(255,255,255,.06);
+  color:#e6edfb;
+}
+/* selected item — solid white, dark text */
+.ad-link.active{
+  background:#fff;
+  color:#0d1b3a;
+  font-weight:600;
+  box-shadow:0 4px 14px rgba(0,0,0,.18);
+}
+.ad-link.active .ad-ic{
+  color:#1553d6;           /* icon accent on the white pill */
+  stroke-width:1.9;
+}
+.ad-link.active:hover{
+  background:#fff;          /* keep white on hover, no flicker */
+  color:#0d1b3a;
+}
 .ad-ic{width:15px;height:15px;stroke-width:1.6}
 .ad-user{margin:10px;padding:8px;border-radius:9px;gap:8px}.ad-av{width:28px;height:28px;font-size:.66rem}.ad-av.sm{width:24px;height:24px;font-size:.62rem}.ad-ui b{font-size:.74rem;font-weight:600}.ad-badge{font-size:.58rem;padding:0 6px;border-radius:4px}
 .ad.collapsed .ad-link{padding:8px 0}

@@ -5,19 +5,41 @@ import {useTools,useSlides,brandsOf,ToolCard,BrandIcon,CATS} from './shared';
 import {IC} from './Shell';
 const Ic=({d,s=16})=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{d}</svg>;
 
-function Hero(){const slides=useSlides();const [i,setI]=useState(0);const [hold,setHold]=useState(false);const sx=useRef(0);const n=slides.length;
+function Hero(){
+  const slides=useSlides();
+  const [i,setI]=useState(0);
+  const [hold,setHold]=useState(false);
+  const sx=useRef(0);
+  const n=slides.length;
   useEffect(()=>{if(i>=n)setI(0)},[n,i]);
   useEffect(()=>{if(n<2||hold||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const t=setInterval(()=>setI(v=>(v+1)%n),5500);return()=>clearInterval(t)},[n,hold]);
-  if(!n)return null;const go=d=>setI(v=>(v+d+n)%n);
-  return <section className="hbanner" aria-roledescription="carousel" aria-label="Featured" onMouseEnter={()=>setHold(true)} onMouseLeave={()=>setHold(false)}
-    onTouchStart={e=>{sx.current=e.touches[0].clientX}} onTouchEnd={e=>{const d=e.changedTouches[0].clientX-sx.current;if(Math.abs(d)>50)go(d<0?1:-1)}}>
-    <div className="hb-track" style={{transform:`translateX(-${i*100}%)`}}>{slides.map((h,k)=>{const txt=h.title||h.subtitle,ext=/^https?:/.test(h.link||'');
-      return <div key={h.id} className={'hb-slide'+(txt?' hb-t':'')} aria-hidden={k!==i} aria-roledescription="slide">
-        <img src={h.image} alt={h.title||`Slide ${k+1}`} loading={k===0?'eager':'lazy'} decoding="async"/>
-        {txt&&<div className="wrap hb-in">{h.title&&<h1>{h.title}</h1>}{h.subtitle&&<p>{h.subtitle}</p>}
-          {h.link&&(ext?<a href={h.link} className="btn lg" tabIndex={k===i?0:-1}>Shop now</a>:<Link to={h.link} className="btn lg" tabIndex={k===i?0:-1}>Shop now</Link>)}</div>}</div>})}</div>
-    {n>1&&<><button className="hb-nav prev" onClick={()=>go(-1)} aria-label="Previous slide">‹</button><button className="hb-nav next" onClick={()=>go(1)} aria-label="Next slide">›</button>
-      <div className="hb-dots">{slides.map((_,k)=><button key={k} className={k===i?'on':''} onClick={()=>setI(k)} aria-label={`Go to slide ${k+1}`}/>)}</div></>}</section>;}
+  if(!n)return null;
+  const go=d=>setI(v=>(v+d+n)%n);
+  return <section
+      className="hbanner"
+      aria-roledescription="carousel"
+      aria-label="Featured"
+      style={{maxWidth:'1300px',margin:'24px auto',borderRadius:'20px',overflow:'hidden',height:'clamp(320px,45vh,520px)'}}
+      onMouseEnter={()=>setHold(true)}
+      onMouseLeave={()=>setHold(false)}
+      onTouchStart={e=>{sx.current=e.touches[0].clientX}}
+      onTouchEnd={e=>{const d=e.changedTouches[0].clientX-sx.current;if(Math.abs(d)>50)go(d<0?1:-1)}}>
+    <div className="hb-track" style={{transform:`translateX(-${i*100}%)`,height:'100%'}}>
+      {slides.map((h,k)=>{const txt=h.title||h.subtitle,ext=/^https?:/.test(h.link||'');
+        return <div key={h.id} className={'hb-slide'+(txt?' hb-t':'')} style={{height:'100%'}} aria-hidden={k!==i} aria-roledescription="slide">
+          <img src={h.image} alt={h.title||`Slide ${k+1}`} loading={k===0?'eager':'lazy'} decoding="async"
+            style={{width:'100%',height:'100%',objectFit:'contain',display:'block',background:'#0d1b3a'}}/>
+          {txt&&<div className="wrap hb-in">{h.title&&<h1>{h.title}</h1>}{h.subtitle&&<p>{h.subtitle}</p>}
+            {h.link&&(ext?<a href={h.link} className="btn lg" tabIndex={k===i?0:-1}>Shop now</a>:<Link to={h.link} className="btn lg" tabIndex={k===i?0:-1}>Shop now</Link>)}</div>}
+        </div>})}
+    </div>
+    {n>1&&<>
+      <button className="hb-nav prev" onClick={()=>go(-1)} aria-label="Previous slide">‹</button>
+      <button className="hb-nav next" onClick={()=>go(1)} aria-label="Next slide">›</button>
+      <div className="hb-dots">{slides.map((_,k)=><button key={k} className={k===i?'on':''} onClick={()=>setI(k)} aria-label={`Go to slide ${k+1}`}/>)}</div>
+    </>}
+  </section>;
+}
 
 function Row({icon,label,items,rev}){const list=[...items,...items];
   return <div className="mq"><div className="mq-l"><Ic d={icon} s={15}/><span>{label}</span></div><div className="mq-w"><div className={'mq-t'+(rev?' rev':'')}>{list.map((t,i)=><Link key={i} to={`/products/${t.id}`} className="mq-i"><span className={'mq-b '+(t.access==='free'?'f':'p')}>{t.access==='free'?'Free':'Paid'}</span><span className="mq-d">{t.purchaseDate}</span><span>{t.name}</span></Link>)}</div></div></div>;}
@@ -34,7 +56,7 @@ const Head=({t,to})=><div className="sh"><h2>{t}</h2>{to&&<Link to={to}>View all
 
 export function Home(){const tools=useTools();const brands=brandsOf(tools);
   const free=(tools||[]).filter(t=>t.access==='free').slice(0,6),latest=[...(tools||[])].sort((a,b)=>(b.purchaseDate||'').localeCompare(a.purchaseDate||'')).slice(0,6);
-  return <><Hero/><Bands tools={tools}/><Promo/>
+  return <><Hero/><Promo/>
     <section className="wrap sec2"><Head t="Shop by brand"/>{!tools?<p className="muted">Loading…</p>:!brands.length?<p className="muted">No brands yet. Add tools from the admin panel.</p>:<div className="fgrid3">{brands.map(b=><BrandIcon key={b.name} {...b}/>)}</div>}</section>
     {!!latest.length&&<section className="wrap sec2"><Head t="New arrivals" to="/products?s=new"/><div className="pgrid">{latest.map(t=><ToolCard key={t.id} t={t}/>)}</div></section>}
     {!!free.length&&<section className="wrap sec2"><Head t="Free tools" to="/products?f=free"/><div className="pgrid">{free.map(t=><ToolCard key={t.id} t={t}/>)}</div></section>}
